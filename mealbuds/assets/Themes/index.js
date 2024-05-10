@@ -1,3 +1,3 @@
 import Themes from "./themes";
-import images from "../images/images";
-export { Themes, images };
+import Images from "../images/images";
+export { Themes, Images };
