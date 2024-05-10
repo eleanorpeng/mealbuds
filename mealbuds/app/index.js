@@ -30,6 +30,31 @@ export default function App() {
   if (!fontsLoaded) return null;
   return (
     <View style={styles.container}>
+      <View style={[styles.toggle_container, styles.shadow]}>
+        <TouchableOpacity
+          style={[
+            styles.toggle,
+            { borderBottomLeftRadius: 12, borderTopLeftRadius: 12 },
+          ]}
+        >
+          <Text style={styles.toggle_text}>Upcoming</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.toggle,
+            {
+              borderBottomRightRadius: 12,
+              borderTopRightRadius: 12,
+              backgroundColor: Themes.colors.lightGray,
+            },
+          ]}
+        >
+          <Text style={[styles.toggle_text, { color: Themes.colors.gray }]}>
+            History
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.header}>Upcoming Meals</Text>
       <Card
         name="Michael Bernstein"
@@ -68,5 +93,28 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Bold",
     fontSize: 23,
     color: Themes.colors.orange,
+  },
+  toggle_container: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  toggle_text: {
+    fontFamily: "Inter-Bold",
+    fontSize: 20,
+    color: Themes.colors.orange,
+  },
+  toggle: {
+    display: "flex",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Themes.colors.backgroundOrange,
+    padding: 12,
+  },
+  shadow: {
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
 });

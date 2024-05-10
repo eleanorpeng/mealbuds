@@ -3,7 +3,7 @@ import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 export default function Card(props) {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, styles.shadow]}>
       <View>
         <Image style={styles.profile_image} source={props.profile_img} />
       </View>
@@ -72,5 +72,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontFamily: "Inter-Bold",
+  },
+  shadow: {
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
 });
