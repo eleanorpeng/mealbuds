@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../components/card";
@@ -16,6 +16,8 @@ import Card from "../components/card";
 const windowWidth = Dimensions.get("window").width;
 
 export default function App() {
+  const [onUpcoming, setOnUpcoming] = useState(true);
+
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
@@ -34,10 +36,24 @@ export default function App() {
         <TouchableOpacity
           style={[
             styles.toggle,
-            { borderBottomLeftRadius: 12, borderTopLeftRadius: 12 },
+            {
+              borderBottomLeftRadius: 12,
+              borderTopLeftRadius: 12,
+              backgroundColor: onUpcoming
+                ? Themes.colors.backgroundOrange
+                : Themes.colors.lightGray,
+            },
           ]}
+          onPress={() => setOnUpcoming(true)}
         >
-          <Text style={styles.toggle_text}>Upcoming</Text>
+          <Text
+            style={[
+              styles.toggle_text,
+              { color: onUpcoming ? Themes.colors.orange : Themes.colors.gray },
+            ]}
+          >
+            Upcoming
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
@@ -45,26 +61,40 @@ export default function App() {
             {
               borderBottomRightRadius: 12,
               borderTopRightRadius: 12,
-              backgroundColor: Themes.colors.lightGray,
+              backgroundColor: !onUpcoming
+                ? Themes.colors.backgroundOrange
+                : Themes.colors.lightGray,
             },
           ]}
+          onPress={() => setOnUpcoming(false)}
         >
-          <Text style={[styles.toggle_text, { color: Themes.colors.gray }]}>
+          <Text
+            style={[
+              styles.toggle_text,
+              {
+                color: !onUpcoming ? Themes.colors.orange : Themes.colors.gray,
+              },
+            ]}
+          >
             History
           </Text>
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.header}>Upcoming Meals</Text>
+      <Text style={styles.header}>
+        {onUpcoming ? "Upcoming" : "Past"} Meals
+      </Text>
       <Card
         name="Michael Bernstein"
         profile_img={Images.michael}
         dining="Arrillaga Dining"
         time="5/14 6:00PM"
       />
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.button_text}>Find New Match</Text>
-      </TouchableOpacity>
+      {onUpcoming ? (
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.button_text}>Find New Match</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 }
