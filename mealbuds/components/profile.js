@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   editButton: {
     height: "50%",
     width: "40%",
-    backgroundColor: Themes.colors.backgroundOrange,
+    backgroundColor: Themes.colors.midOrange,
     borderRadius: "50%",
     paddingHorizontal: 12,
     justifyContent: "center",
