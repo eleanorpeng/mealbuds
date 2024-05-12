@@ -5,9 +5,11 @@ import { Themes, Images } from "../assets/Themes";
 export default function Layout() {
   return (
     <Tabs
+      initialRouteName="home"
       screenOptions={{
         headerStyle: { backgroundColor: Themes.colors.grayBackground },
         headerTitle: "MealBuds",
+        headerShown: false,
         headerBackTitleStyle: {
           fontSize: 20,
           color: Themes.colors.orange,
@@ -20,6 +22,13 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
+          href: null,
+        }}
+      ></Tabs.Screen>
+      <Tabs.Screen
+        name="home"
+        options={{
+          // headerShown: false,
           tabBarLabel: "Home",
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="home" size={size} color={color} />

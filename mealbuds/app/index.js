@@ -12,14 +12,12 @@ import { useCallback, useState } from "react";
 import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../components/card";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, Redirect, Stack, useLocalSearchParams } from "expo-router";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
 
 export default function App() {
-  const [onUpcoming, setOnUpcoming] = useState(true);
-
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
@@ -32,75 +30,7 @@ export default function App() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;
-  return (
-    <View style={styles.container}>
-      <View style={[styles.toggle_container, styles.shadow]}>
-        <TouchableOpacity
-          style={[
-            styles.toggle,
-            {
-              borderBottomLeftRadius: 12,
-              borderTopLeftRadius: 12,
-              backgroundColor: onUpcoming
-                ? Themes.colors.backgroundOrange
-                : Themes.colors.lightGray,
-            },
-          ]}
-          onPress={() => setOnUpcoming(true)}
-        >
-          <Text
-            style={[
-              styles.toggle_text,
-              { color: onUpcoming ? Themes.colors.orange : Themes.colors.gray },
-            ]}
-          >
-            Upcoming
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.toggle,
-            {
-              borderBottomRightRadius: 12,
-              borderTopRightRadius: 12,
-              backgroundColor: !onUpcoming
-                ? Themes.colors.backgroundOrange
-                : Themes.colors.lightGray,
-            },
-          ]}
-          onPress={() => setOnUpcoming(false)}
-        >
-          <Text
-            style={[
-              styles.toggle_text,
-              {
-                color: !onUpcoming ? Themes.colors.orange : Themes.colors.gray,
-              },
-            ]}
-          >
-            History
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.header}>
-        {onUpcoming ? "Upcoming" : "Past"} Meals
-      </Text>
-      <Card
-        name="Michael Bernstein"
-        profile_img={Images.michael}
-        dining="Arrillaga Dining"
-        time="5/14 6:00PM"
-      />
-      {onUpcoming ? (
-        // <Link href={{ pathname: "/components/home/matching" }}>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.button_text}>Find New Match</Text>
-        </TouchableOpacity>
-      ) : // </Link>
-      null}
-    </View>
-  );
+  return <Redirect href="/home/homeDefault" />;
 }
 
 const styles = StyleSheet.create({
