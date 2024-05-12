@@ -12,6 +12,13 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { useState, useEffect } from "react";
+import {
+  router,
+  Link,
+  useLocalSearchParams,
+  Stack,
+  useNavigation,
+} from "expo-router";
 import { Images, Themes } from "../assets/Themes";
 
 const windowWidth = Dimensions.get("window").width;
@@ -216,17 +223,24 @@ const Profile = ({
         </View>
       </View>
       <View style={styles.editButtonsContainer}>
-        <TouchableOpacity style={styles.editButton}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: "Inter",
-              alignSelf: "center",
-            }}
-          >
-            Edit Profile
-          </Text>
-        </TouchableOpacity>
+        <Link
+          href={{
+            pathname: "profile/surveyPage",
+          }}
+          asChild
+        >
+          <TouchableOpacity style={styles.editButton}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: "Inter",
+                alignSelf: "center",
+              }}
+            >
+              Edit Profile
+            </Text>
+          </TouchableOpacity>
+        </Link>
         <TouchableOpacity style={styles.editButton}>
           <Text
             style={{

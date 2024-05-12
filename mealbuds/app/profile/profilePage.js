@@ -1,6 +1,14 @@
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Profile from "../../components/profile";
+import { useState, useEffect } from "react";
+import {
+  router,
+  Link,
+  useLocalSearchParams,
+  Stack,
+  useNavigation,
+} from "expo-router";
 
 const hardcodedProfileData = {
   name: "James Landay",
