@@ -28,7 +28,6 @@ export default function Layout() {
       <Tabs.Screen
         name="home"
         options={{
-          // headerShown: false,
           tabBarLabel: "Home",
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="home" size={size} color={color} />
