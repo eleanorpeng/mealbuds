@@ -12,6 +12,8 @@ import { useCallback, useState } from "react";
 import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../components/card";
+import { Link, useLocalSearchParams } from "expo-router";
+
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
 
@@ -91,10 +93,12 @@ export default function App() {
         time="5/14 6:00PM"
       />
       {onUpcoming ? (
+        // <Link href={{ pathname: "/components/home/matching" }}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.button_text}>Find New Match</Text>
         </TouchableOpacity>
-      ) : null}
+      ) : // </Link>
+      null}
     </View>
   );
 }
