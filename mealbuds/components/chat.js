@@ -25,6 +25,8 @@ const Chat = ({ name, profilePicUrl, time, thumbnailMessage, messages }) => {
           pathname: "messages/dm",
           params: {
             messages: JSON.stringify(messages),
+            name: name,
+            profilePicUrl: profilePicUrl,
           },
         }}
         asChild
