@@ -20,7 +20,7 @@ export default function SurveyPage() {
           },
         }}
       />
-      <Text>Hello</Text>
+      <Text>Hello!</Text>
     </View>
   );
 }
