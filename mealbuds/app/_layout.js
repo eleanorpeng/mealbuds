@@ -8,6 +8,7 @@ export default function Layout() {
       screenOptions={{
         headerStyle: { backgroundColor: Themes.colors.grayBackground },
         headerTitle: "MealBuds",
+        headerShown: false,
         headerBackTitleStyle: {
           fontSize: 20,
           color: Themes.colors.orange,
