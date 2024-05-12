@@ -12,49 +12,60 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { Images, Themes } from "../assets/Themes";
+import { router, Link, useLocalSearchParams, Stack } from "expo-router";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const Chat = ({ name, profilePicUrl, time, thumbnailMessage }) => {
+const Chat = ({ name, profilePicUrl, time, thumbnailMessage, messages }) => {
   return (
     <View>
-      <TouchableOpacity style={styles.chatPreviewContainer}>
-        <Image
-          style={styles.profilePic}
-          source={{
-            uri: profilePicUrl,
-          }}
-        />
-        <View style={styles.nameThumbnailTimeContainer}>
-          <View style={styles.nameTimeRow}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Inter-Bold",
-              }}
-            >
-              {name}
-            </Text>
+      <Link
+        href={{
+          pathname: "messages/dm",
+          params: {
+            messages: JSON.stringify(messages),
+          },
+        }}
+        asChild
+      >
+        <TouchableOpacity style={styles.chatPreviewContainer}>
+          <Image
+            style={styles.profilePic}
+            source={{
+              uri: profilePicUrl,
+            }}
+          />
+          <View style={styles.nameThumbnailTimeContainer}>
+            <View style={styles.nameTimeRow}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Inter-Bold",
+                }}
+              >
+                {name}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: "Inter",
+                }}
+              >
+                {time}
+              </Text>
+            </View>
             <Text
               style={{
                 fontSize: 14,
                 fontFamily: "Inter",
               }}
             >
-              {time}
+              {thumbnailMessage}
             </Text>
           </View>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "Inter",
-            }}
-          >
-            {thumbnailMessage}
-          </Text>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Link>
       <View style={styles.separator} />
     </View>
   );
