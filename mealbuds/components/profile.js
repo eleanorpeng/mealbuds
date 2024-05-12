@@ -233,7 +233,7 @@ const Profile = ({
             <Text
               style={{
                 fontSize: 16,
-                fontFamily: "Inter",
+                fontFamily: "Inter-Bold",
                 alignSelf: "center",
               }}
             >
@@ -245,7 +245,7 @@ const Profile = ({
           <Text
             style={{
               fontSize: 16,
-              fontFamily: "Inter",
+              fontFamily: "Inter-Bold",
               alignSelf: "center",
             }}
           >
