@@ -241,17 +241,24 @@ const Profile = ({
             </Text>
           </TouchableOpacity>
         </Link>
-        <TouchableOpacity style={styles.editButton}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: "Inter-Bold",
-              alignSelf: "center",
-            }}
-          >
-            Edit Availability
-          </Text>
-        </TouchableOpacity>
+        <Link
+          href={{
+            pathname: "profile/availabilityPage",
+          }}
+          asChild
+        >
+          <TouchableOpacity style={styles.editButton}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: "Inter-Bold",
+                alignSelf: "center",
+              }}
+            >
+              Edit Availability
+            </Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </View>
   );
