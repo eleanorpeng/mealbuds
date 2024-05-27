@@ -8,18 +8,21 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Themes, Images } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../../components/card";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
+import Onboarding from "../../components/onboarding";
+import storage from "../../data/storage";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
 
 export default function HomeDefault() {
   const [onUpcoming, setOnUpcoming] = useState(true);
-
+  const [hasOnboarded, setHasOnboarded] = useState(false);
+  const [name, setName] = useState("");
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../../assets/fonts/Inter-Regular.ttf"),
@@ -32,75 +35,105 @@ export default function HomeDefault() {
   }, [fontsLoaded]);
 
   if (!fontsLoaded) return null;
+
+  const storeName = (name) => {
+    storage.save({ key: "name", data: { name: name } });
+    setHasOnboarded(true);
+    setName(name);
+  };
+
+  useEffect(() => {
+    storage
+      .load({ key: "name" })
+      .then((result) => {
+        setHasOnboarded(true);
+        setName(result.name);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [name]);
+
   return (
     <View style={styles.container}>
-      <View style={[styles.toggle_container, styles.shadow]}>
-        <TouchableOpacity
-          style={[
-            styles.toggle,
-            {
-              borderBottomLeftRadius: 12,
-              borderTopLeftRadius: 12,
-              backgroundColor: onUpcoming
-                ? Themes.colors.backgroundOrange
-                : Themes.colors.lightGray,
-            },
-          ]}
-          onPress={() => setOnUpcoming(true)}
-        >
-          <Text
-            style={[
-              styles.toggle_text,
-              {
-                color: onUpcoming ? Themes.colors.orange : Themes.colors.gray,
-              },
-            ]}
-          >
-            Upcoming
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.toggle,
-            {
-              borderBottomRightRadius: 12,
-              borderTopRightRadius: 12,
-              backgroundColor: !onUpcoming
-                ? Themes.colors.backgroundOrange
-                : Themes.colors.lightGray,
-            },
-          ]}
-          onPress={() => setOnUpcoming(false)}
-        >
-          <Text
-            style={[
-              styles.toggle_text,
-              {
-                color: !onUpcoming ? Themes.colors.orange : Themes.colors.gray,
-              },
-            ]}
-          >
-            History
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {hasOnboarded ? (
+        <View style={styles.container}>
+          <Text style={styles.header}>Welcome back, {name}</Text>
+          <View style={[styles.toggle_container, styles.shadow]}>
+            <TouchableOpacity
+              style={[
+                styles.toggle,
+                {
+                  borderBottomLeftRadius: 12,
+                  borderTopLeftRadius: 12,
+                  backgroundColor: onUpcoming
+                    ? Themes.colors.backgroundOrange
+                    : Themes.colors.lightGray,
+                },
+              ]}
+              onPress={() => setOnUpcoming(true)}
+            >
+              <Text
+                style={[
+                  styles.toggle_text,
+                  {
+                    color: onUpcoming
+                      ? Themes.colors.orange
+                      : Themes.colors.gray,
+                  },
+                ]}
+              >
+                Upcoming
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.toggle,
+                {
+                  borderBottomRightRadius: 12,
+                  borderTopRightRadius: 12,
+                  backgroundColor: !onUpcoming
+                    ? Themes.colors.backgroundOrange
+                    : Themes.colors.lightGray,
+                },
+              ]}
+              onPress={() => setOnUpcoming(false)}
+            >
+              <Text
+                style={[
+                  styles.toggle_text,
+                  {
+                    color: !onUpcoming
+                      ? Themes.colors.orange
+                      : Themes.colors.gray,
+                  },
+                ]}
+              >
+                History
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <Text style={styles.header}>
-        {onUpcoming ? "Upcoming" : "Past"} Meals
-      </Text>
-      <Card
-        name="Michael Bernstein"
-        profile_img={Images.michael}
-        dining="Arrillaga Dining"
-        time="5/14 6:00PM"
-      />
-      {onUpcoming ? (
-        <Link href={{ pathname: "home/matching" }} asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.button_text}>Find New Match</Text>
-          </TouchableOpacity>
-        </Link>
-      ) : null}
+          <Text style={styles.header}>
+            {onUpcoming ? "Upcoming" : "Past"} Meals
+          </Text>
+          <Card
+            name="Michael Bernstein"
+            profile_img={Images.michael}
+            dining="Arrillaga Dining"
+            time="5/14 6:00PM"
+          />
+          {onUpcoming ? (
+            <Link href={{ pathname: "home/matching" }} asChild>
+              <TouchableOpacity style={styles.button}>
+                <Text style={styles.button_text}>Find New Match</Text>
+              </TouchableOpacity>
+            </Link>
+          ) : null}
+        </View>
+      ) : (
+        <Onboarding storeName={storeName} />
+      )}
     </View>
   );
 }
