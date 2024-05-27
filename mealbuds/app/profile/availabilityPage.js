@@ -22,12 +22,117 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export default function AvailabilityPage() {
-  const [BStartText, onChangeBStartText] = useState("Ex: 8 AM");
-  const [BEndText, onChangeBEndText] = useState("Ex: 9:30 AM");
-  const [LStartText, onChangeLStartText] = useState("Ex: 11:30 AM");
-  const [LEndText, onChangeLEndText] = useState("Ex: 12:30 PM");
-  const [DStartText, onChangeDStartText] = useState("Ex: 5 PM");
-  const [DEndText, onChangeDEndText] = useState("Ex: 8 PM");
+  const [sunFree, setSunFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleSunFree = (id) => {
+    setSunFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [monFree, setMonFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleMonFree = (id) => {
+    setMonFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [tuesFree, setTuesFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleTuesFree = (id) => {
+    setTuesFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [wedsFree, setWedsFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleWedsFree = (id) => {
+    setWedsFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [thursFree, setThursFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleThursFree = (id) => {
+    setThursFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [friFree, setFriFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleFriFree = (id) => {
+    setFriFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
+
+  const [satFree, setSatFree] = useState([
+    { id: 1, label: "Breakfast", checked: false },
+    { id: 2, label: "Lunch", checked: false },
+    { id: 3, label: "Dinner", checked: false },
+  ]);
+
+  const toggleSatfree = (id) => {
+    setSatFree((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
+      )
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -39,87 +144,115 @@ export default function AvailabilityPage() {
           },
         }}
       />
-      <View>
-        <Text style={styles.titleText}>When are you free this week?</Text>
-        <Text style={styles.dayText}>Monday, May 13th</Text>
-      </View>
-      <View>
-        <Text style={styles.mealText}>Breakfast</Text>
-        <View style={styles.timeContainer}>
-          <Text style={styles.startText}>Start</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeBStartText}
-            value={BStartText}
-          />
+      <ScrollView>
+        <View>
+          <Text style={styles.titleText}>When are you free this week?</Text>
+          <Text style={styles.dayText}>Sunday, June 2nd</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {sunFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleSunFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Monday, June 3rd</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {monFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleMonFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Tuesday, June 4th</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {tuesFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleTuesFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Wednesday, June 5th</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {wedsFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleWedsFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Thursday, June 6th</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {thursFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleThursFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Friday, June 7th</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {friFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleFriFree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.dayText}>Saturday, June 8th</Text>
+          <View style={{ alignItems: "center", paddingBottom: 10 }}>
+            {satFree.map((checkbox) => (
+              <TouchableOpacity
+                key={checkbox.id}
+                style={[styles.checkbox, checkbox.checked && styles.checked]}
+                onPress={() => toggleSatfree(checkbox.id)}
+              >
+                <Text style={styles.checkboxText}>{checkbox.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-        <View style={styles.timeContainer}>
-          <Text style={styles.EndText}>End</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeBEndText}
-            value={BEndText}
-          />
+        <View style={styles.submit}>
+          <Link
+            href={{
+              pathname: "profile/profilePage",
+            }}
+            asChild
+          >
+            <TouchableOpacity style={styles.submitButton}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Inter-Bold",
+                  alignSelf: "center",
+                }}
+              >
+                Submit
+              </Text>
+            </TouchableOpacity>
+          </Link>
         </View>
-      </View>
-      <View>
-        <Text style={styles.mealText}>Lunch</Text>
-        <View style={styles.timeContainer}>
-          <Text style={styles.startText}>Start</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeLStartText}
-            value={LStartText}
-          />
-        </View>
-        <View style={styles.timeContainer}>
-          <Text style={styles.EndText}>End</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeLEndText}
-            value={LEndText}
-          />
-        </View>
-      </View>
-      <View>
-        <Text style={styles.mealText}>Dinner</Text>
-        <View style={styles.timeContainer}>
-          <Text style={styles.startText}>Start</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeDStartText}
-            value={DStartText}
-          />
-        </View>
-        <View style={styles.timeContainer}>
-          <Text style={styles.EndText}>End</Text>
-          <TextInput
-            style={styles.textBox}
-            onChangeText={onChangeDEndText}
-            value={DEndText}
-          />
-        </View>
-      </View>
-      <View style={styles.next}>
-        <Link
-          href={{
-            pathname: "profile/profilePage",
-          }}
-          asChild
-        >
-          <TouchableOpacity style={styles.nextButton}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Inter-Bold",
-                alignSelf: "center",
-              }}
-            >
-              Next
-            </Text>
-          </TouchableOpacity>
-        </Link>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -144,43 +277,28 @@ const styles = StyleSheet.create({
     padding: 20,
     color: Themes.colors.orange,
   },
-  mealText: {
-    fontSize: 18,
-    fontFamily: "Inter-Bold",
-    paddingLeft: 20,
-  },
-  startText: {
-    fontSize: 18,
-    fontFamily: "Inter",
-    paddingLeft: 20,
-  },
-  EndText: {
-    fontSize: 18,
-    fontFamily: "Inter",
-    paddingLeft: 20,
-    paddingRight: 10,
-  },
-  timeContainer: {
+  checkbox: {
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: 15,
-    //borderWidth: 5,
-  },
-  textBox: {
-    height: 40,
-    width: "75%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    marginVertical: 5,
+    padding: 7,
+    justifyContent: "center",
+    width: "50%",
+    backgroundColor: Themes.colors.midOrange,
     borderRadius: 10,
-    borderColor: Themes.colors.orange,
-    color: Themes.colors.gray,
   },
-  next: {
+  checkboxText: {
+    fontSize: 15,
+    fontFamily: "Inter",
+  },
+  checked: {
+    backgroundColor: Themes.colors.orange,
+  },
+  submit: {
     alignItems: "center",
     padding: 15,
   },
-  nextButton: {
+  submitButton: {
     backgroundColor: Themes.colors.midOrange,
     borderRadius: "50%",
     paddingHorizontal: 12,
