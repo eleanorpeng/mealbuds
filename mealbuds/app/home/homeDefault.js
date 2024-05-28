@@ -42,17 +42,17 @@ export default function HomeDefault() {
     setName(name);
   };
 
-  useEffect(() => {
-    storage
-      .load({ key: "name" })
-      .then((result) => {
-        setHasOnboarded(true);
-        setName(result.name);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [name]);
+  // useEffect(() => {
+  //   storage
+  //     .load({ key: "name" })
+  //     .then((result) => {
+  //       setHasOnboarded(true);
+  //       setName(result.name);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [name]);
 
   return (
     <View style={styles.container}>

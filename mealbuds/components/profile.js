@@ -21,7 +21,6 @@ import {
   useNavigation,
 } from "expo-router";
 import { Images, Themes } from "../assets/Themes";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { Camera, CameraType } from "expo-camera";
 import Ionicons from "@expo/vector-icons/Ionicons";
