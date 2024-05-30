@@ -36,31 +36,41 @@ export default function SignUp1() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Sign Up for MealBuds</Text>
-      <View style={styles.input_container}>
-        <Text style={styles.text_label}>Email</Text>
-        <TextInput
-          onChangeText={setEmail}
-          placeholder="Enter your email"
-          style={styles.input}
-          keyboardType="email-address"
-        />
-        <Text style={styles.text_label}>Password</Text>
-        <TextInput
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          style={styles.input}
-          secureTextEntry
-        />
+      <View style={styles.main_container}>
+        <View style={styles.input_container}>
+          <Text style={styles.text_label}>Email</Text>
+          <TextInput
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            style={styles.input}
+            keyboardType="email-address"
+          />
+
+          <Text style={styles.text_label}>Password</Text>
+          <TextInput
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
+        <View style={styles.signup_container}>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.text_label}>Sign Up</Text>
+          </TouchableOpacity>
+
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          <Link href={{ pathname: "home/homeDefault" }} asChild>
+            <TouchableOpacity>
+              <Text style={styles.link}>Already have an account? Login</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+
+      {/* <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Ionicons name="arrow-forward" size={24} color="black" />
-      </TouchableOpacity>
-      <Link href={{ pathname: "home/homeDefault" }} asChild>
-        <TouchableOpacity>
-          <Text style={styles.link}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </Link>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -71,17 +81,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     flex: 1,
+    padding: 40,
   },
   text: {
     fontSize: 25,
     fontFamily: "Inter-Bold",
     textAlign: "center",
-    marginTop: 50,
+    // marginTop: 50,
   },
   text_label: {
     fontSize: 18,
     fontFamily: "Inter-Regular",
-    textAlign: "center",
+    // textAlign: "center",
   },
   input: {
     borderWidth: 1,
@@ -93,19 +104,20 @@ const styles = StyleSheet.create({
   input_container: {
     display: "flex",
     gap: 10,
-    flex: 1,
+    // flex: 1,
     justifyContent: "center",
-    marginTop: 50,
+    // alignItems: "center"
+    // marginTop: 50,
   },
   button: {
     backgroundColor: Themes.colors.backgroundOrange,
     padding: 20,
-    borderRadius: 100,
+    borderRadius: 16,
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 50,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    // position: "absolute",
+    // bottom: 50,
   },
   error: {
     color: "red",
@@ -116,5 +128,17 @@ const styles = StyleSheet.create({
     color: Themes.colors.primary,
     fontFamily: "Inter-Regular",
     textDecorationLine: "underline",
+  },
+  signup_container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  main_container: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+    gap: 30,
   },
 });

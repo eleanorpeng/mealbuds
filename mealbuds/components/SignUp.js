@@ -32,7 +32,7 @@ export default function SignUp({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Sign Up for MealBuds</Text>
+      <Text style={styles.text}>Sign Up</Text>
       <View style={styles.input_container}>
         <Text style={styles.text_label}>Email</Text>
         <TextInput
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 10,
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     marginTop: 50,
   },
   button: {
