@@ -10,34 +10,48 @@ import {
 } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { auth } from "../../components/firebase"; // Ensure this is the correct path to your firebase.js
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "./firebase"; // Ensure this is the correct path to your firebase.js
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Link, useRouter } from "expo-router";
+import { setDoc, doc } from "firebase/firestore";
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function SignUp1() {
+export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
-
   const router = useRouter();
 
   const handleSignUp = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then(async (userCredential) => {
+        const userId = userCredential.user.uid;
+
+        // Add the email to the "users" collection in Firestore
+        await setDoc(doc(db, "users", userId), {
+          email: email,
+          name: name,
+          // Add any other user fields you want to store here
+        });
         router.push("home/homeDefault"); // Navigate to the home page after successful sign-up
       })
       .catch((err) => {
         setError(err.message);
       });
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Sign Up for MealBuds</Text>
       <View style={styles.main_container}>
         <View style={styles.input_container}>
+          <Text style={styles.text_label}>Name</Text>
+          <TextInput
+            onChangeText={setName}
+            placeholder="Enter your name"
+            style={styles.input}
+          />
           <Text style={styles.text_label}>Email</Text>
           <TextInput
             onChangeText={setEmail}
@@ -67,10 +81,6 @@ export default function SignUp1() {
           </Link>
         </View>
       </View>
-
-      {/* <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Ionicons name="arrow-forward" size={24} color="black" />
-      </TouchableOpacity> */}
     </View>
   );
 }
@@ -87,12 +97,10 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: "Inter-Bold",
     textAlign: "center",
-    // marginTop: 50,
   },
   text_label: {
     fontSize: 18,
     fontFamily: "Inter-Regular",
-    // textAlign: "center",
   },
   input: {
     borderWidth: 1,
@@ -104,10 +112,7 @@ const styles = StyleSheet.create({
   input_container: {
     display: "flex",
     gap: 10,
-    // flex: 1,
     justifyContent: "center",
-    // alignItems: "center"
-    // marginTop: 50,
   },
   button: {
     backgroundColor: Themes.colors.backgroundOrange,
@@ -116,8 +121,6 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "flex-end",
-    // position: "absolute",
-    // bottom: 50,
   },
   error: {
     color: "red",

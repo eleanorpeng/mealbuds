@@ -56,7 +56,7 @@ export default function Onboarding(props, { navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Ionicons name="arrow-forward" size={24} color="black" />
       </TouchableOpacity>
-      <Link href={{ pathname: "home/SignUp1" }} asChild>
+      <Link href={{ pathname: "home/SignUp" }} asChild>
         <TouchableOpacity>
           <Text style={styles.link}>Don't have an account? Sign Up</Text>
         </TouchableOpacity>
