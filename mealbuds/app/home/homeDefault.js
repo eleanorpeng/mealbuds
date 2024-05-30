@@ -13,7 +13,7 @@ import { Themes, Images } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../../components/card";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
-import Onboarding from "../../components/onboarding";
+import Login from "../../components/Login";
 import storage from "../../data/storage";
 
 // SplashScreen.preventAutoHideAsync();
@@ -138,7 +138,7 @@ export default function HomeDefault() {
           ) : null}
         </View>
       ) : (
-        <Onboarding storeName={storeName} />
+        <Login storeName={storeName} />
       )}
     </View>
   );
