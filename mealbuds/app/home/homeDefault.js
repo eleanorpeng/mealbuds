@@ -53,7 +53,13 @@ export default function HomeDefault() {
   //       console.log(err);
   //     });
   // }, [name]);
-
+  // const [user, setUser] = useState(null);
+  // useEffect(() => {
+  //   onAuthStateChanged(auth, (user) => {
+  //     setCurrentUser(user);
+  //     console.log(user);
+  //   });
+  // }, []);
   return (
     <View style={styles.container}>
       {hasOnboarded ? (

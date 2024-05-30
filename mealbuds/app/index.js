@@ -8,11 +8,13 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../components/card";
 import { Link, Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../components/firebase";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;

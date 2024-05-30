@@ -14,6 +14,7 @@ import { auth, db } from "./firebase"; // Ensure this is the correct path to you
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Link, useRouter } from "expo-router";
 import { setDoc, doc } from "firebase/firestore";
+import storage from "../../data/storage";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -28,7 +29,7 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const userId = userCredential.user.uid;
-
+        storage.save({ key: "uid", data: { uid: userId } });
         // Add the email to the "users" collection in Firestore
         await setDoc(doc(db, "users", userId), {
           email: email,

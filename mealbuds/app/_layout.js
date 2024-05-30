@@ -1,7 +1,10 @@
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Themes, Images } from "../assets/Themes";
-
+import { NavigationContainer } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../components/firebase";
 export default function Layout() {
   return (
     <Tabs

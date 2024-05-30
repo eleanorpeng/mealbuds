@@ -19,6 +19,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import storage from "../../data/storage";
+import { Redirect } from "expo-router";
+import Unauthenticated from "../../components/unauthenticated";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -26,8 +28,16 @@ const windowHeight = Dimensions.get("window").height;
 const ChatsPage = () => {
   const [chatsData, setChatsData] = useState([]);
   const [input, setInput] = useState("");
-
+  const [uid, setUid] = useState(null);
   useEffect(() => {
+    storage
+      .load({ key: "uid" })
+      .then((result) => {
+        setUid(result.uid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     const q = query(collection(firestore, "messages"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const chats = snapshot.docs.map((doc) => ({
@@ -38,7 +48,7 @@ const ChatsPage = () => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [uid]);
 
   const onMessageSend = async () => {
     const storedData = await storage.load({ key: "name" });
@@ -72,38 +82,44 @@ const ChatsPage = () => {
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "Inter-Bold",
-          paddingLeft: 24,
-          paddingTop: 8,
-        }}
-      >
-        Messages
-      </Text>
-      <FlatList
-        data={chatsData}
-        renderItem={renderChats}
-        keyExtractor={(item) => item.id}
-      />
-      <View style={styles.composer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setInput(text)}
-          value={input}
-          fontFamily="Inter"
-          placeholder="Send a message..."
-          placeholderTextColor="rgba(34, 65, 89, .5)"
-        />
-        <TouchableOpacity style={styles.send} onPress={onMessageSend}>
-          {input.trim() !== "" ? (
-            <Text style={{ color: "blue" }}>Send</Text>
-          ) : (
-            <Text style={{ color: "gray" }}>Send</Text>
-          )}
-        </TouchableOpacity>
-      </View>
+      {uid ? (
+        <View>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Inter-Bold",
+              paddingLeft: 24,
+              paddingTop: 8,
+            }}
+          >
+            Messages
+          </Text>
+          <FlatList
+            data={chatsData}
+            renderItem={renderChats}
+            keyExtractor={(item) => item.id}
+          />
+          <View style={styles.composer}>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setInput(text)}
+              value={input}
+              fontFamily="Inter"
+              placeholder="Send a message..."
+              placeholderTextColor="rgba(34, 65, 89, .5)"
+            />
+            <TouchableOpacity style={styles.send} onPress={onMessageSend}>
+              {input.trim() !== "" ? (
+                <Text style={{ color: "blue" }}>Send</Text>
+              ) : (
+                <Text style={{ color: "gray" }}>Send</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
+        <Unauthenticated />
+      )}
     </View>
   );
 };

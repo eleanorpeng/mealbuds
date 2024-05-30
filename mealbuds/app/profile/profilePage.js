@@ -2,6 +2,8 @@ import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Profile from "../../components/profile";
 import { useState, useEffect } from "react";
+import storage from "../../data/storage";
+
 import {
   router,
   Link,
@@ -9,6 +11,7 @@ import {
   Stack,
   useNavigation,
 } from "expo-router";
+import Unauthenticated from "../../components/unauthenticated";
 
 const hardcodedProfileData = {
   name: "James Landay",
@@ -43,9 +46,22 @@ const renderProfile = () => {
 };
 
 const ProfilePage = () => {
+  const [uid, setUid] = useState(null);
+
+  useEffect(() => {
+    storage
+      .load({ key: "uid" })
+      .then((result) => {
+        setUid(result.uid);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [uid]);
+
   return (
     <View style={styles.container}>
-      <Profile {...hardcodedProfileData} />
+      {uid ? <Profile {...hardcodedProfileData} /> : <Unauthenticated />}
     </View>
   );
 };
