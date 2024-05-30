@@ -14,10 +14,11 @@ import { auth } from "./firebase"; // Adjust the path as needed
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { useRouter } from "expo-router";
+import storage from "../data/storage";
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function Onboarding(props, { navigation }) {
+export default function Login(props, { navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -26,7 +27,7 @@ export default function Onboarding(props, { navigation }) {
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        props.storeName(email);
+        storage.save({ key: "loggedIn", data: true });
       })
       .catch((err) => {
         setError(err.message);

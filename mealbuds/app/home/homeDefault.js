@@ -21,7 +21,7 @@ const windowWidth = Dimensions.get("window").width;
 
 export default function HomeDefault() {
   const [onUpcoming, setOnUpcoming] = useState(true);
-  const [hasOnboarded, setHasOnboarded] = useState(false);
+  const [hasLoggedIn, setHasLoggedIn] = useState(false);
   const [name, setName] = useState("");
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../../assets/fonts/Inter-Bold.ttf"),
@@ -42,27 +42,18 @@ export default function HomeDefault() {
     setName(name);
   };
 
-  // useEffect(() => {
-  //   storage
-  //     .load({ key: "name" })
-  //     .then((result) => {
-  //       setHasOnboarded(true);
-  //       setName(result.name);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [name]);
-  // const [user, setUser] = useState(null);
-  // useEffect(() => {
-  //   onAuthStateChanged(auth, (user) => {
-  //     setCurrentUser(user);
-  //     console.log(user);
-  //   });
-  // }, []);
+  useEffect(() => {
+    storage
+      .getBatchData([{ key: "loggedIn" }, { key: "user" }])
+      .then((results) => {
+        setHasLoggedIn(results[0]);
+        setName(results[1].name);
+      });
+  }, [name]);
+
   return (
     <View style={styles.container}>
-      {hasOnboarded ? (
+      {hasLoggedIn ? (
         <View style={styles.container}>
           <Text style={styles.header}>Welcome back, {name}</Text>
           <View style={[styles.toggle_container, styles.shadow]}>

@@ -29,7 +29,8 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const userId = userCredential.user.uid;
-        storage.save({ key: "uid", data: { uid: userId } });
+        const userData = { name: name, uid: userId };
+        storage.save({ key: "user", data: userData });
         // Add the email to the "users" collection in Firestore
         await setDoc(doc(db, "users", userId), {
           email: email,
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
     gap: 10,
     flex: 1,
     padding: 40,
+    backgroundColor: Themes.colors.grayBackground,
   },
   text: {
     fontSize: 25,

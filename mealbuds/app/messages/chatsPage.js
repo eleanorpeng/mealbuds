@@ -31,7 +31,7 @@ const ChatsPage = () => {
   const [uid, setUid] = useState(null);
   useEffect(() => {
     storage
-      .load({ key: "uid" })
+      .load({ key: "user" })
       .then((result) => {
         setUid(result.uid);
       })
