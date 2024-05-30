@@ -18,6 +18,15 @@ import {
   useNavigation,
 } from "expo-router";
 import { useState, useEffect, useContext } from "react";
+import { firestore, auth } from "./firebase";
+import {
+  collection,
+  setDoc,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
@@ -161,6 +170,23 @@ export default function SurveyPage() {
           : checkbox
       )
     );
+  };
+
+  const onSubmitted = async () => {
+    const user = auth.currentUser;
+    await setDoc(collection(firestore, "User/" + user.uid + "/Compatibility"), {
+      hometown: user.hometownText,
+      major: user.majorText,
+      hobbies: user.hobbiesText,
+      yap: user.yapRanking,
+      indoor: user.indoorRanking,
+      night: user.nightRanking,
+      plan: user.planRanking,
+      book: user.bookRanking,
+      eat: user.eatRanking,
+      dietary: user.dietaryText,
+      dining_halls: user.hallCheckboxes,
+    });
   };
 
   return (
@@ -323,7 +349,7 @@ export default function SurveyPage() {
             }}
             asChild
           >
-            <TouchableOpacity style={styles.submitButton}>
+            <TouchableOpacity style={styles.submitButton} onPress={onSubmitted}>
               <Text
                 style={{
                   fontSize: 16,
