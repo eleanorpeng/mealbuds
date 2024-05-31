@@ -29,11 +29,13 @@ const ChatsPage = () => {
   const [chatsData, setChatsData] = useState([]);
   const [input, setInput] = useState("");
   const [uid, setUid] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     storage
-      .load({ key: "user" })
-      .then((result) => {
-        setUid(result.uid);
+      .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
+      .then((results) => {
+        setIsLoggedIn(results[0]);
+        setUid(results[1]);
       })
       .catch((err) => {
         console.log(err);
@@ -48,7 +50,7 @@ const ChatsPage = () => {
     });
 
     return () => unsubscribe();
-  }, [uid]);
+  }, [isLoggedIn, uid]);
 
   const onMessageSend = async () => {
     const storedData = await storage.load({ key: "name" });
@@ -82,7 +84,7 @@ const ChatsPage = () => {
 
   return (
     <View style={styles.container}>
-      {uid ? (
+      {isLoggedIn ? (
         <View>
           <Text
             style={{

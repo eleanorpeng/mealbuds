@@ -15,14 +15,30 @@ import Card from "../../components/card";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import Login from "../../components/Login";
 import storage from "../../data/storage";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  getDocs,
+  getDoc,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
+import { auth, db } from "./firebase";
+import { signOut } from "firebase/auth";
+
+// import { firestore } from "./firebase";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
 
 export default function HomeDefault() {
   const [onUpcoming, setOnUpcoming] = useState(true);
-  const [hasLoggedIn, setHasLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [name, setName] = useState("");
+  const [uid, setUid] = useState(null);
+  const [matchData, setMatchData] = useState(null);
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../../assets/fonts/Inter-Regular.ttf"),
@@ -42,18 +58,59 @@ export default function HomeDefault() {
     setName(name);
   };
 
-  useEffect(() => {
-    storage
-      .getBatchData([{ key: "loggedIn" }, { key: "user" }])
-      .then((results) => {
-        setHasLoggedIn(results[0]);
-        setName(results[1].name);
+  const handleLogoutPressed = () => {
+    // console.log(matchData);
+    signOut(auth)
+      .then(() => {
+        storage.save({ key: "loggedIn", data: false });
+        setIsLoggedIn(false);
+        console.log("sign out");
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  }, [name]);
+  };
+
+  const convertTime = (seconds) => {
+    const date = new Date(seconds * 1000); // Convert seconds to milliseconds
+    const padZero = (num) => (num < 10 ? "0" + num : num); // Helper function to pad single digit numbers with a leading zero
+
+    const month = padZero(date.getMonth() + 1); // Months are zero-based
+    const day = padZero(date.getDate());
+    const year = date.getFullYear();
+    const hours = padZero(date.getHours());
+    const minutes = padZero(date.getMinutes());
+
+    return `${month}/${day}/${year} ${hours}:${minutes}`;
+  };
+
+  useEffect(() => {
+    const initialSetup = async () => {
+      storage
+        .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
+        .then((results) => {
+          setIsLoggedIn(results[0]);
+          setUid(results[1]);
+          const queryMatch = async () => {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists) {
+              setMatchData(docSnap.data().match);
+              setName(docSnap.data().name);
+            } else {
+              console.log("No match found.");
+            }
+          };
+          queryMatch();
+        })
+        .catch((err) => console.log(err));
+    };
+    initialSetup();
+  }, [uid, isLoggedIn]);
 
   return (
     <View style={styles.container}>
-      {hasLoggedIn ? (
+      {isLoggedIn ? (
         <View style={styles.container}>
           <Text style={styles.header}>Welcome back, {name}</Text>
           <View style={[styles.toggle_container, styles.shadow]}>
@@ -114,12 +171,15 @@ export default function HomeDefault() {
           <Text style={styles.header}>
             {onUpcoming ? "Upcoming" : "Past"} Meals
           </Text>
-          <Card
-            name="Michael Bernstein"
-            profile_img={Images.michael}
-            dining="Arrillaga Dining"
-            time="5/14 6:00PM"
-          />
+          {matchData && onUpcoming ? (
+            <Card
+              name={matchData.match_name}
+              profile_img={Images.michael}
+              dining={matchData.dining_hall}
+              time={convertTime(matchData.time.seconds)}
+            />
+          ) : null}
+
           {onUpcoming ? (
             <Link href={{ pathname: "home/matching" }} asChild>
               <TouchableOpacity style={styles.button}>
@@ -127,9 +187,12 @@ export default function HomeDefault() {
               </TouchableOpacity>
             </Link>
           ) : null}
+          <TouchableOpacity style={styles.button} onPress={handleLogoutPressed}>
+            <Text style={styles.button_text}>Logout</Text>
+          </TouchableOpacity>
         </View>
       ) : (
-        <Login storeName={storeName} />
+        <Login setIsLoggedIn={setIsLoggedIn} />
       )}
     </View>
   );

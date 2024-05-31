@@ -47,21 +47,24 @@ const renderProfile = () => {
 
 const ProfilePage = () => {
   const [uid, setUid] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     storage
-      .load({ key: "user" })
-      .then((result) => {
-        setUid(result.uid);
+      .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
+      .then((results) => {
+        setIsLoggedIn(results[0]);
+        setUid(results[1]);
+        console.log(results[0]);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [uid]);
+  }, [isLoggedIn]);
 
   return (
     <View style={styles.container}>
-      {uid ? <Profile {...hardcodedProfileData} /> : <Unauthenticated />}
+      {isLoggedIn ? <Profile {...hardcodedProfileData} /> : <Unauthenticated />}
     </View>
   );
 };

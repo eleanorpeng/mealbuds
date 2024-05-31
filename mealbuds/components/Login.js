@@ -26,8 +26,12 @@ export default function Login(props, { navigation }) {
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user.uid);
         storage.save({ key: "loggedIn", data: true });
+        storage.save({ key: "uid", data: user.uid });
+        props.setIsLoggedIn(true);
       })
       .catch((err) => {
         setError(err.message);
