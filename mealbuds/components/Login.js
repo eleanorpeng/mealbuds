@@ -28,7 +28,6 @@ export default function Login(props, { navigation }) {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user.uid);
         storage.save({ key: "loggedIn", data: true });
         storage.save({ key: "uid", data: user.uid });
         props.setIsLoggedIn(true);
