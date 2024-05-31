@@ -7,21 +7,31 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Themes, Images } from "../../assets/Themes";
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function Matching() {
+  const params = useLocalSearchParams();
+  const matchData = params.matchData ? JSON.parse(params.matchData) : null;
   return (
     <View style={styles.container}>
       <View style={styles.match_container}>
         <Image style={styles.image} source={Images.matching}></Image>
         <Text style={styles.text}>Matching with a meal bud...</Text>
-        <Link href={{ pathname: "home/match" }} asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>View Match</Text>
-          </TouchableOpacity>
-        </Link>
+        {matchData ? (
+          <Link
+            href={{
+              pathname: "home/match",
+              params: { matchData: JSON.stringify(matchData) },
+            }}
+            asChild
+          >
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.text}>View Match</Text>
+            </TouchableOpacity>
+          </Link>
+        ) : null}
       </View>
     </View>
   );

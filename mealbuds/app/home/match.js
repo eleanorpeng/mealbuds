@@ -9,11 +9,36 @@ import {
 import { Images, Themes } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MatchCard from "../../components/matchCard";
-export default function Match() {
+import { Link, useLocalSearchParams } from "expo-router";
+import {
+  convertTime,
+  capitalize,
+  getDay,
+  getMonth,
+  getDayOfWeek,
+  getTime,
+} from "../../assets/utilities";
+
+export default function Match(props) {
+  const params = useLocalSearchParams();
+  const matchDataJSON = params.matchData ? JSON.parse(params.matchData) : null;
+
+  const matchData = {
+    common_interests: capitalize(matchDataJSON.common_interests.join(", ")),
+    match_name: matchDataJSON.match_name,
+    day: getDay(matchDataJSON.time.seconds),
+    month: getMonth(matchDataJSON.time.seconds),
+    major: matchDataJSON.major,
+    interests: capitalize(matchDataJSON.interests.join(", ")),
+    dining_hall: matchDataJSON.dining_hall,
+    time: getTime(matchDataJSON.time.seconds),
+    dayOfWeek: getDayOfWeek(matchDataJSON.time.seconds),
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Your Meal Bud is</Text>
-      <MatchCard />
+      <MatchCard match={matchData} />
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Chat</Text>
       </TouchableOpacity>

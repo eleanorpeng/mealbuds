@@ -181,7 +181,15 @@ export default function HomeDefault() {
           ) : null}
 
           {onUpcoming ? (
-            <Link href={{ pathname: "home/matching" }} asChild>
+            <Link
+              href={{
+                pathname: "home/matching",
+                params: {
+                  matchData: matchData ? JSON.stringify(matchData) : null,
+                },
+              }}
+              asChild
+            >
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.button_text}>Find New Match</Text>
               </TouchableOpacity>

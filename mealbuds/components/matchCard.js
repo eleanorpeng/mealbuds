@@ -20,20 +20,17 @@ const MatchInfo = (title, description) => {
   );
 };
 
-export default function MatchCard() {
-  const matchingInfo = [
-    { title: "Common Interests", description: "Education" },
-  ];
+export default function MatchCard(props) {
   return (
     <ScrollView style={styles.shadow}>
       <View style={[styles.card, styles.shadow]}>
         <Image style={styles.image} source={Images.michael}></Image>
-        <Text style={styles.name}>Michael Bernstein</Text>
+        <Text style={styles.name}>{props.match.match_name}</Text>
 
         <View style={styles.meal_info_container}>
           <View style={styles.date}>
-            <Text style={styles.date_text}>14</Text>
-            <Text style={styles.date_text}>May</Text>
+            <Text style={styles.date_text}>{props.match.day}</Text>
+            <Text style={styles.date_text}>{props.match.month}</Text>
           </View>
           <View style={styles.info_container}>
             <View style={styles.info}>
@@ -42,7 +39,7 @@ export default function MatchCard() {
                 size={28}
                 color={Themes.colors.orange}
               />
-              <Text style={styles.info_text}>Arrillaga Dining</Text>
+              <Text style={styles.info_text}>{props.match.dining_hall}</Text>
             </View>
             <View style={styles.info}>
               <Ionicons
@@ -50,7 +47,9 @@ export default function MatchCard() {
                 size={28}
                 color={Themes.colors.orange}
               />
-              <Text style={styles.info_text}>6:00PM, Tue</Text>
+              <Text style={styles.info_text}>
+                {props.match.time}, {props.match.dayOfWeek}
+              </Text>
             </View>
           </View>
         </View>
@@ -60,21 +59,21 @@ export default function MatchCard() {
               <Text style={styles.match_title}>Common Interests</Text>
             </View>
             <Text style={styles.match_description}>
-              Education, food, social computing
+              {props.match.common_interests}
             </Text>
           </View>
           <View style={styles.match_container}>
             <View style={styles.match_title_container}>
               <Text style={styles.match_title}>Major</Text>
             </View>
-            <Text style={styles.match_description}>Symbolic Systems</Text>
+            <Text style={styles.match_description}>{props.match.major}</Text>
           </View>
           <View style={styles.match_container}>
             <View style={styles.match_title_container}>
               <Text style={styles.match_title}>Interests</Text>
             </View>
             <Text style={styles.match_description}>
-              Traveling, food, photography, social computing, education
+              {props.match.interests}
             </Text>
           </View>
         </View>
@@ -87,7 +86,6 @@ const styles = StyleSheet.create({
     display: "flex",
     borderRadius: 16,
     backgroundColor: Themes.colors.white,
-    // justifyContent: "space-evenly",
     alignItems: "center",
     borderRadius: 16,
     backgroundColor: Themes.colors.white,
@@ -95,13 +93,12 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     gap: 20,
     width: windowWidth - 40,
-    // height: windowHeight - 100,
   },
   meal_info_container: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
-    gap: 10,
+    justifyContent: "space-between",
+    width: windowWidth * 0.7,
   },
   name: {
     fontFamily: "Inter-Bold",
@@ -115,6 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: Themes.colors.backgroundOrange,
     borderRadius: 16,
     padding: 20,
+    paddingHorizontal: 25,
   },
   date_text: {
     fontSize: 22,
@@ -166,7 +164,6 @@ const styles = StyleSheet.create({
   match_container: {
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center",
     alignItems: "flex-start",
     gap: 10,
   },
@@ -177,5 +174,6 @@ const styles = StyleSheet.create({
   match_main: {
     display: "flex",
     gap: 20,
+    width: windowWidth * 0.7,
   },
 });
