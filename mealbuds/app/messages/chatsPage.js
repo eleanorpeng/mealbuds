@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Chat from "../../components/chat";
-import { db } from "../firebase"; // Import firebase from the same directory
+import { db } from "../../context/firebase"; // Import firebase from the same directory
 import {
   collection,
   query,
@@ -27,7 +27,7 @@ import {
   endAt,
 } from "firebase/firestore";
 import storage from "../../data/storage";
-import { AuthContext, AuthProvider } from "../context/AuthContext";
+import { AuthContext, AuthProvider } from "../../context/AuthContext";
 import { formatDistanceToNow } from "date-fns";
 import { Redirect } from "expo-router";
 import Unauthenticated from "../../components/unauthenticated";

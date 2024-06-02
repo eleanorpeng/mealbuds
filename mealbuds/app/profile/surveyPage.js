@@ -32,12 +32,10 @@ const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 export default function SurveyPage() {
-  const [hometownText, onChangeHometownText] = useState("Hometown...");
-  const [majorText, onChangeMajorText] = useState("Major...");
-  const [hobbiesText, onChangeHobbiesText] = useState("Hobbies...");
-  const [dietaryText, onChangeDietaryText] = useState(
-    "Vegetarian, vegan, etc..."
-  );
+  const [hometownText, onChangeHometownText] = useState("");
+  const [majorText, onChangeMajorText] = useState("");
+  const [hobbiesText, onChangeHobbiesText] = useState("");
+  const [dietaryText, onChangeDietaryText] = useState("");
 
   const [yearCheckboxes, setYearCheckboxes] = useState([
     { id: 1, label: "Freshman", checked: false },
@@ -212,6 +210,7 @@ export default function SurveyPage() {
           style={styles.textBox}
           onChangeText={onChangeHometownText}
           value={hometownText}
+          placeholder="Hometown"
         />
         <Text style={styles.questionText}>What year are you?</Text>
         <View style={{ alignItems: "center" }}>
@@ -231,12 +230,14 @@ export default function SurveyPage() {
           style={styles.textBox}
           onChangeText={onChangeMajorText}
           value={majorText}
+          placeholder="Major"
         />
         <Text style={styles.questionText}>What are your hobbies?</Text>
         <TextInput
           style={styles.textBox}
           onChangeText={onChangeHobbiesText}
           value={hobbiesText}
+          placeholder="Hobbies"
         />
         <Text style={styles.questionText}>
           Answer the following questions by choosing a number from 1 to 5.
@@ -330,6 +331,7 @@ export default function SurveyPage() {
           style={styles.textBox}
           onChangeText={onChangeDietaryText}
           value={dietaryText}
+          placeholder="Vegetarian, vegan, etc..."
         />
         <Text style={styles.questionText}>
           Select your preferred dining halls.

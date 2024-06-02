@@ -23,11 +23,11 @@ import {
   updateDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { db, storage } from "../firebase";
+import { db, storage } from "../../context/firebase";
 import uuid from "react-native-uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { AuthContext, AuthProvider } from "../context/AuthContext";
-import { ChatContext } from "../context/ChatContext";
+import { AuthContext, AuthProvider } from "../../context/AuthContext";
+import { ChatContext } from "../../context/ChatContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

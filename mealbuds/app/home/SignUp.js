@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { auth, db } from "../firebase"; // Ensure this is the correct path to your firebase.js
+// import { auth, db } from "../../firebase"; // Ensure this is the correct path to your firebase.js
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Link, useRouter } from "expo-router";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import storage from "../../data/storage";
+import { auth, db } from "../../context/firebase";
 
 const windowWidth = Dimensions.get("window").width;
 

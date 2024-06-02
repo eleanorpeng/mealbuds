@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { Themes } from "../../assets/Themes";
-import { AuthProvider } from "../context/AuthContext";
+import { AuthProvider } from "../../context/AuthContext";
 
 export default function HomeLayout() {
   return (

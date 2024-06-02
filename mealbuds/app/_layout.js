@@ -1,16 +1,8 @@
 import { Stack, Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Themes, Images } from "../assets/Themes";
-import { AuthContext } from "./context/AuthContext";
-import { useContext } from "react";
-import { Link, useRouter } from "expo-router";
-import { AuthProvider } from "./context/AuthContext";
-import { ChatContextProvider } from "./context/ChatContext";
-
-import { NavigationContainer } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../components/firebase";
+import { AuthProvider } from "../context/AuthContext";
+import { ChatContextProvider } from "../context/ChatContext";
 export default function Layout() {
   // const { currentUser } = useContext(AuthContext);
   // const router = useRouter();

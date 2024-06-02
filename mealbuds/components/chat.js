@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Images, Themes } from "../assets/Themes";
 import { router, Link, useLocalSearchParams, Stack } from "expo-router";
-import { AuthContext, AuthProvider } from "../app/context/AuthContext";
+import { AuthContext, AuthProvider } from "../context/AuthContext";
 import React, { useEffect, useState, useContext } from "react";
 import {
   collection,
@@ -26,7 +26,7 @@ import {
   serverTimestamp,
   getDoc,
 } from "firebase/firestore";
-import { db } from "../app/firebase";
+import { db } from "../context/firebase";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;

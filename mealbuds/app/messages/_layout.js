@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { Themes } from "../../assets/Themes";
-import { AuthProvider } from "../context/AuthContext";
-import { ChatContextProvider } from "../context/ChatContext";
+import { AuthProvider } from "../../context/AuthContext";
+import { ChatContextProvider } from "../../context/ChatContext";
 
 export default function MessagesLayout() {
   return (

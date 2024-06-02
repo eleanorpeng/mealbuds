@@ -15,7 +15,7 @@ import Card from "../../components/card";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import Login from "../../components/Login";
 import storage from "../../data/storage";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import {
   collection,
   query,
@@ -26,7 +26,8 @@ import {
   getDoc,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../context/firebase";
+
 import { signOut } from "firebase/auth";
 
 // import { firestore } from "./firebase";
