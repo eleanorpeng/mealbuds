@@ -5,7 +5,12 @@ export default function Card(props) {
   return (
     <View style={[styles.card, styles.shadow]}>
       <View>
-        <Image style={styles.profile_image} source={props.profile_img} />
+        <Image
+          style={styles.profile_image}
+          source={{
+            uri: "https://c0.klipartz.com/pngpicture/753/432/gratis-png-perfil-de-usuario-2018-in-sight-conferencia-de-usuario-expo-negocio-predeterminado-negocio-thumbnail.png",
+          }}
+        />
       </View>
       <View style={styles.card_info_container}>
         <Text style={styles.name}>{props.name}</Text>

@@ -31,7 +31,7 @@ import { db } from "../app/firebase";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const Chat = ({ name, profilePicUrl, time, messages, uid }) => {
+const Chat = ({ name, profilePicUrl, messages, uid }) => {
   const { currentUser } = useContext(AuthContext);
 
   const onChatPress = async () => {
@@ -98,14 +98,6 @@ const Chat = ({ name, profilePicUrl, time, messages, uid }) => {
                 }}
               >
                 {name}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: "Inter",
-                }}
-              >
-                {time}
               </Text>
             </View>
           </View>

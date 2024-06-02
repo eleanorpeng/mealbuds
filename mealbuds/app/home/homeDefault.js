@@ -182,7 +182,6 @@ export default function HomeDefault() {
           {matchData && onUpcoming ? (
             <Card
               name={matchData.match_name}
-              profile_img={Images.michael}
               dining={matchData.dining_hall}
               time={convertTime(matchData.time.seconds)}
             />

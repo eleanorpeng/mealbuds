@@ -81,6 +81,19 @@ const ChatsPage = () => {
             })
             .filter((user) => user !== null);
 
+          const sortedUsers = users.sort((a, b) => {
+            if (
+              a.userInfo.lastMessage.timestamp &&
+              b.userInfo.lastMessage.timestamp
+            ) {
+              return (
+                b.userInfo.lastMessage.timestamp.seconds -
+                a.userInfo.lastMessage.timestamp.seconds
+              );
+            }
+            return 0;
+          });
+
           console.log("CHATSDATA:", users);
           setChatsData(users);
         });
@@ -127,19 +140,19 @@ const ChatsPage = () => {
   const renderChats = ({ item }) => {
     console.log("chat item:", item);
 
-    const getTime = (timestamp) => {
-      if (timestamp) {
-        const date = new Date(timestamp.seconds * 1000);
-        return formatDistanceToNow(date, { addSuffix: true });
-      }
-      return "Just now";
-    };
+    // const getTime = (timestamp) => {
+    //   if (timestamp) {
+    //     const date = new Date(timestamp.seconds * 1000);
+    //     return formatDistanceToNow(date, { addSuffix: true });
+    //   }
+    //   return "Just now";
+    // };
 
     return (
       <Chat
         name={item.userInfo.name}
         profilePicUrl={item.userInfo.profilePicUrl}
-        time={getTime(item.date)}
+        // time={getTime(item.date)}
         // lastMessage={item.lastMessage && item.lastMessage.input}
         messages={item.messages}
         uid={item.userInfo.userId}
@@ -149,29 +162,25 @@ const ChatsPage = () => {
 
   return (
     <View style={styles.container}>
-      {isLoggedIn ? (
-        <AuthProvider>
-          <View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "Inter-Bold",
-                paddingLeft: 24,
-                paddingTop: 8,
-              }}
-            >
-              Messages
-            </Text>
-            <FlatList
-              data={chatsData}
-              renderItem={renderChats}
-              keyExtractor={(item) => item.id}
-            />
-          </View>
-        </AuthProvider>
-      ) : (
-        <Unauthenticated />
-      )}
+      <AuthProvider>
+        <View>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Inter-Bold",
+              paddingLeft: 24,
+              paddingTop: 8,
+            }}
+          >
+            Messages
+          </Text>
+          <FlatList
+            data={chatsData}
+            renderItem={renderChats}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </AuthProvider>
     </View>
   );
 };

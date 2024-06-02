@@ -133,20 +133,16 @@ const ProfilePage = () => {
 
   return (
     <View style={styles.container}>
-      {isLoggedIn ? (
-        <Profile
-          name={name}
-          profilePicUrl={profilePicUrl}
-          major={major}
-          year={year}
-          interests={interests}
-          hobbies={hobbies}
-          hometown={hometown}
-          diningHalls={diningHalls}
-        />
-      ) : (
-        <Unauthenticated />
-      )}
+      <Profile
+        name={name}
+        profilePicUrl={profilePicUrl}
+        major={major}
+        year={year}
+        interests={interests}
+        hobbies={hobbies}
+        hometown={hometown}
+        diningHalls={diningHalls}
+      />
     </View>
   );
 };

@@ -24,7 +24,12 @@ export default function MatchCard(props) {
   return (
     <ScrollView style={styles.shadow}>
       <View style={[styles.card, styles.shadow]}>
-        <Image style={styles.image} source={Images.michael}></Image>
+        <Image
+          style={styles.image}
+          source={{
+            uri: "https://c0.klipartz.com/pngpicture/753/432/gratis-png-perfil-de-usuario-2018-in-sight-conferencia-de-usuario-expo-negocio-predeterminado-negocio-thumbnail.png",
+          }}
+        ></Image>
         <Text style={styles.name}>{props.match.match_name}</Text>
 
         <View style={styles.meal_info_container}>
