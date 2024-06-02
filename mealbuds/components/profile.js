@@ -224,7 +224,7 @@ const Profile = ({
                   alignSelf: "center",
                 }}
               >
-                {diningHalls.join(", ")}
+                {diningHalls}
               </Text>
             </View>
           </View>
@@ -252,7 +252,7 @@ const Profile = ({
                   alignSelf: "center",
                 }}
               >
-                {hobbies.join(", ")}
+                {hobbies}
               </Text>
             </View>
           </View>

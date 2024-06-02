@@ -11,7 +11,17 @@ import {
   Stack,
   useNavigation,
 } from "expo-router";
-import Unauthenticated from "../../components/unauthenticated";
+import { firestore, auth } from "./firebase";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  getDoc,
+  query,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 
 const hardcodedProfileData = {
   name: "James Landay",
@@ -46,25 +56,96 @@ const renderProfile = () => {
 };
 
 const ProfilePage = () => {
-  const [uid, setUid] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [name, setName] = useState("");
+  const profilePicUrl =
+    "https://pbs.twimg.com/profile_images/1258841358220972032/MzL1iXMN_400x400.jpg";
+  const [major, setMajor] = useState("");
+  const [year, setYear] = useState("");
+  const [interests, setInterests] = useState("");
+  const [hobbies, setHobbies] = useState("");
+  const [hometown, setHometown] = useState("");
+  const [diningHalls, setDiningHalls] = useState("");
+  var selectedYearLabel = "";
+  var selectedDiningHalls = [];
+  /*
+  useEffect(() => {
+    console.log("hello");
+    const user = auth.currentUser;
+    const updateProfile = async () => {
+      const docRef = doc(firestore, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        for (var i = 0; i < data.year.length; i++) {
+          if (data.year[i].checked) {
+            selectedYearLabel = data.year[i].label;
+            break;
+          }
+        }
+        for (var i = 0; i < data.dining_halls.length; i++) {
+          if (data.dining_halls[i].checked) {
+            selectedDiningHalls.push(data.dining_halls[i].label);
+          }
+        }
+        setName(data.name);
+        setMajor(data.major);
+        setYear(selectedYearLabel);
+        setInterests("");
+        setHobbies(data.hobbies);
+        setHometown(data.hometown);
+        setDiningHalls(selectedDiningHalls.join(", "));
+      } else {
+        console.log("No profile update found.");
+      }
+    };
+    updateProfile();
+  }, []);*/
 
   useEffect(() => {
-    storage
-      .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
-      .then((results) => {
-        setIsLoggedIn(results[0]);
-        setUid(results[1]);
-        console.log(results[0]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [isLoggedIn]);
+    console.log("hello");
+    const user = auth.currentUser;
+    const docRef = doc(firestore, "users", user.uid);
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      if (doc.exists) {
+        const data = doc.data();
+        for (var i = 0; i < data.year.length; i++) {
+          if (data.year[i].checked) {
+            selectedYearLabel = data.year[i].label;
+            break;
+          }
+        }
+        for (var i = 0; i < data.dining_halls.length; i++) {
+          if (data.dining_halls[i].checked) {
+            selectedDiningHalls.push(data.dining_halls[i].label);
+          }
+        }
+        setName(data.name);
+        setMajor(data.major);
+        setYear(selectedYearLabel);
+        setInterests("");
+        setHobbies(data.hobbies);
+        setHometown(data.hometown);
+        setDiningHalls(selectedDiningHalls.join(", "));
+      } else {
+        console.log("No profile update found.");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <View style={styles.container}>
-      {isLoggedIn ? <Profile {...hardcodedProfileData} /> : <Unauthenticated />}
+      <Profile
+        name={name}
+        profilePicUrl={profilePicUrl}
+        major={major}
+        year={year}
+        interests={interests}
+        hobbies={hobbies}
+        hometown={hometown}
+        diningHalls={diningHalls}
+      />
     </View>
   );
 };
