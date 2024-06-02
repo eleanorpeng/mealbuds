@@ -8,13 +8,14 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { Themes, Images } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../../components/card";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
 import Onboarding from "../../components/onboarding";
 import storage from "../../data/storage";
+import { AuthContext } from "../context/AuthContext";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
@@ -27,6 +28,8 @@ export default function HomeDefault() {
     "Inter-Bold": require("../../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../../assets/fonts/Inter-Regular.ttf"),
   });
+  const { currentUser } = useContext(AuthContext);
+  console.log("hallelujah: ", currentUser);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

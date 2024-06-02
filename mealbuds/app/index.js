@@ -13,11 +13,12 @@ import { Themes, Images } from "../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Card from "../components/card";
 import { Link, Redirect, Stack, useLocalSearchParams } from "expo-router";
+import { AuthProvider } from "./context/AuthContext";
 
 // SplashScreen.preventAutoHideAsync();
 const windowWidth = Dimensions.get("window").width;
 
-export default function App() {
+function App() {
   const [fontsLoaded] = useFonts({
     "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
     "Inter-Regular": require("../assets/fonts/Inter-Regular.ttf"),
@@ -31,6 +32,14 @@ export default function App() {
 
   if (!fontsLoaded) return null;
   return <Redirect href="/home/homeDefault" />;
+}
+
+export default function Index() {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
 }
 
 const styles = StyleSheet.create({
