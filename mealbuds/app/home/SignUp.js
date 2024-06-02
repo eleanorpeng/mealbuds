@@ -15,8 +15,6 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Link, useRouter } from "expo-router";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import storage from "../../data/storage";
-import { setDoc, doc } from "firebase/firestore";
-import storage from "../../data/storage";
 
 const windowWidth = Dimensions.get("window").width;
 

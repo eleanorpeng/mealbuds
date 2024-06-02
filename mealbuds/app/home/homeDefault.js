@@ -26,7 +26,7 @@ import {
   getDoc,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
 
 // import { firestore } from "./firebase";
