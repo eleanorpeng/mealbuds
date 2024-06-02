@@ -23,6 +23,8 @@ import {
   getDoc,
   onSnapshot,
   undefined,
+  startAt,
+  endAt,
 } from "firebase/firestore";
 import storage from "../../data/storage";
 import { AuthContext, AuthProvider } from "../context/AuthContext";
@@ -47,6 +49,7 @@ const ChatsPage = () => {
     const retrieveUserUid = async () => {
       try {
         const userUid = await storage.load({ key: "uid" });
+        console.log("userUid: ", userUid);
         return userUid;
       } catch (error) {
         console.error("Error retrieving user data:", error);
@@ -60,8 +63,13 @@ const ChatsPage = () => {
 
       if (userUid) {
         const usersRef = collection(db, "users");
+
+        // WOrks
         const q = query(usersRef, where("userInfo.userId", "!=", userUid));
+
         console.log("QUERY:", q);
+
+        // WORKS
         const unsubscribe = onSnapshot(q, (snapshot) => {
           const users = snapshot.docs
             .map((doc) => {
@@ -76,6 +84,7 @@ const ChatsPage = () => {
           console.log("CHATSDATA:", users);
           setChatsData(users);
         });
+
         storage
           .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
           .then((results) => {
@@ -99,7 +108,7 @@ const ChatsPage = () => {
     }, 60000); // 60000ms = 1 minute
 
     return () => clearInterval(interval);
-  }, [isLoggedIn, uid]);
+  }, [refresh, isLoggedIn, uid]);
 
   const onMessageSend = async () => {
     const storedData = await storage.load({ key: "name" });
@@ -131,7 +140,7 @@ const ChatsPage = () => {
         name={item.userInfo.name}
         profilePicUrl={item.userInfo.profilePicUrl}
         time={getTime(item.date)}
-        lastMessage={item.lastMessage && item.lastMessage.input}
+        // lastMessage={item.lastMessage && item.lastMessage.input}
         messages={item.messages}
         uid={item.userInfo.userId}
       />

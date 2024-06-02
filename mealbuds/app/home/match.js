@@ -39,9 +39,11 @@ export default function Match(props) {
     <View style={styles.container}>
       <Text style={styles.header}>Your Meal Bud is</Text>
       <MatchCard match={matchData} />
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Chat</Text>
-      </TouchableOpacity>
+      <Link href={"/messages/chatsPage"} asChild>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Chat</Text>
+        </TouchableOpacity>
+      </Link>
     </View>
   );
 }

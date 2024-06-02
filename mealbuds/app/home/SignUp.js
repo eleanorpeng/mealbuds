@@ -46,7 +46,25 @@ export default function SignUp() {
           },
         });
 
-        await setDoc(doc(db, "userChats", userId), {
+        // WORKS
+        // await setDoc(doc(db, "userChats", userId), {
+        //   userInfo: {
+        //     userId: userId,
+        //     email: email,
+        //     name: name,
+        //     messages: [],
+        //     lastMessage: {
+        //       input: "",
+        //       timestamp: serverTimestamp(),
+        //     },
+        //     profilePicUrl:
+        //       "https://c0.klipartz.com/pngpicture/753/432/gratis-png-perfil-de-usuario-2018-in-sight-conferencia-de-usuario-expo-negocio-predeterminado-negocio-thumbnail.png",
+        //     // Add any other user fields you want to store here
+        //   },
+        // });
+
+        //TEST
+        await setDoc(doc(db, "chats", userId), {
           userInfo: {
             userId: userId,
             email: email,

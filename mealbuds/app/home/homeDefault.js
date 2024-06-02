@@ -57,6 +57,7 @@ export default function HomeDefault() {
 
   const storeName = (name) => {
     storage.save({ key: "name", data: { name: name } });
+
     setHasOnboarded(true);
     setName(name);
   };
@@ -66,7 +67,11 @@ export default function HomeDefault() {
     signOut(auth)
       .then(() => {
         storage.save({ key: "loggedIn", data: false });
+        storage.remove({
+          key: "uid",
+        });
         setIsLoggedIn(false);
+
         console.log("sign out");
       })
       .catch((error) => {
@@ -99,7 +104,7 @@ export default function HomeDefault() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists) {
               setMatchData(docSnap.data().match);
-              setName(docSnap.data().name);
+              setName(docSnap.data().userInfo.name);
             } else {
               console.log("No match found.");
             }
