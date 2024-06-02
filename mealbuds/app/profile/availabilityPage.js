@@ -18,6 +18,16 @@ import {
   useNavigation,
 } from "expo-router";
 import { useState, useEffect, useContext } from "react";
+import { firestore, auth } from "./firebase";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
@@ -134,6 +144,24 @@ export default function AvailabilityPage() {
     );
   };
 
+  const onSubmitted = async () => {
+    const user = auth.currentUser;
+    await setDoc(
+      doc(firestore, "users/" + user.uid),
+      {
+        sunday: sunFree,
+        monday: monFree,
+        tuesday: tuesFree,
+        wednesday: wedsFree,
+        thursday: thursFree,
+        friday: friFree,
+        saturday: satFree,
+        sunday: sunFree,
+      },
+      { merge: true }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -239,7 +267,7 @@ export default function AvailabilityPage() {
             }}
             asChild
           >
-            <TouchableOpacity style={styles.submitButton}>
+            <TouchableOpacity style={styles.submitButton} onPress={onSubmitted}>
               <Text
                 style={{
                   fontSize: 16,

@@ -21,6 +21,7 @@ import { useState, useEffect, useContext } from "react";
 import { firestore, auth } from "./firebase";
 import {
   collection,
+  doc,
   setDoc,
   addDoc,
   query,
@@ -174,19 +175,24 @@ export default function SurveyPage() {
 
   const onSubmitted = async () => {
     const user = auth.currentUser;
-    await setDoc(collection(firestore, "User/" + user.uid + "/Compatibility"), {
-      hometown: user.hometownText,
-      major: user.majorText,
-      hobbies: user.hobbiesText,
-      yap: user.yapRanking,
-      indoor: user.indoorRanking,
-      night: user.nightRanking,
-      plan: user.planRanking,
-      book: user.bookRanking,
-      eat: user.eatRanking,
-      dietary: user.dietaryText,
-      dining_halls: user.hallCheckboxes,
-    });
+    await setDoc(
+      doc(firestore, "users/" + user.uid),
+      {
+        hometown: hometownText,
+        year: yearCheckboxes,
+        major: majorText,
+        hobbies: hobbiesText,
+        yap: yapRanking,
+        indoor: indoorRanking,
+        night: nightRanking,
+        plan: planRanking,
+        book: bookRanking,
+        eat: eatRanking,
+        dietary: dietaryText,
+        dining_halls: hallCheckboxes,
+      },
+      { merge: true }
+    );
   };
 
   return (
@@ -405,7 +411,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     borderColor: Themes.colors.orange,
-    color: Themes.colors.gray,
+    color: "black",
   },
   rankingBox: {
     flexDirection: "row",
