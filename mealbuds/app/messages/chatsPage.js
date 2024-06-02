@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -10,15 +10,23 @@ import {
 } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Chat from "../../components/chat";
-import { firestore } from "./firebase"; // Import firebase from the same directory
+import { db } from "../firebase"; // Import firebase from the same directory
 import {
   collection,
   query,
-  onSnapshot,
-  addDoc,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  updateDoc,
   serverTimestamp,
+  getDoc,
+  onSnapshot,
+  undefined,
 } from "firebase/firestore";
 import storage from "../../data/storage";
+import { AuthContext, AuthProvider } from "../context/AuthContext";
+import { formatDistanceToNow } from "date-fns";
 import { Redirect } from "expo-router";
 import Unauthenticated from "../../components/unauthenticated";
 
@@ -26,30 +34,71 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const ChatsPage = () => {
+  const { currentUser } = useContext(AuthContext);
+  console.log("mamma mia: ", currentUser);
   const [chatsData, setChatsData] = useState([]);
   const [input, setInput] = useState("");
+  const [username, setUsername] = useState("");
+  const [refresh, setRefresh] = useState(false);
+
   const [uid, setUid] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    storage
-      .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
-      .then((results) => {
-        setIsLoggedIn(results[0]);
-        setUid(results[1]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    const q = query(collection(firestore, "messages"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const chats = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setChatsData(chats);
-    });
+    const retrieveUserUid = async () => {
+      try {
+        const userUid = await storage.load({ key: "uid" });
+        return userUid;
+      } catch (error) {
+        console.error("Error retrieving user data:", error);
+        return null;
+      }
+    };
 
-    return () => unsubscribe();
+    const fetchData = async () => {
+      const userUid = await retrieveUserUid();
+      console.log("userUid:", userUid);
+
+      if (userUid) {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("userInfo.userId", "!=", userUid));
+        console.log("QUERY:", q);
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const users = snapshot.docs
+            .map((doc) => {
+              const data = doc.data();
+              if (data.userInfo && data.userInfo.lastMessage !== undefined) {
+                return { id: doc.id, ...data };
+              }
+              return null;
+            })
+            .filter((user) => user !== null);
+
+          console.log("CHATSDATA:", users);
+          setChatsData(users);
+        });
+        storage
+          .getBatchData([{ key: "loggedIn" }, { key: "uid" }])
+          .then((results) => {
+            setIsLoggedIn(results[0]);
+            setUid(results[1]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        return () => unsubscribe();
+      } else {
+        console.log("User data not found");
+      }
+    };
+
+    fetchData();
+
+    const interval = setInterval(() => {
+      setRefresh((prev) => !prev);
+    }, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval);
   }, [isLoggedIn, uid]);
 
   const onMessageSend = async () => {
@@ -67,17 +116,24 @@ const ChatsPage = () => {
   };
 
   const renderChats = ({ item }) => {
+    console.log("chat item:", item);
+
+    const getTime = (timestamp) => {
+      if (timestamp) {
+        const date = new Date(timestamp.seconds * 1000);
+        return formatDistanceToNow(date, { addSuffix: true });
+      }
+      return "Just now";
+    };
+
     return (
       <Chat
-        name={item.username}
-        profilePicUrl={item.profilePicUrl}
-        time={
-          item.timestamp
-            ? new Date(item.timestamp.seconds * 1000).toLocaleString()
-            : "Just now"
-        }
-        thumbnailMessage={item.message}
-        messages={item.message}
+        name={item.userInfo.name}
+        profilePicUrl={item.userInfo.profilePicUrl}
+        time={getTime(item.date)}
+        lastMessage={item.lastMessage && item.lastMessage.input}
+        messages={item.messages}
+        uid={item.userInfo.userId}
       />
     );
   };
@@ -85,40 +141,25 @@ const ChatsPage = () => {
   return (
     <View style={styles.container}>
       {isLoggedIn ? (
-        <View>
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: "Inter-Bold",
-              paddingLeft: 24,
-              paddingTop: 8,
-            }}
-          >
-            Messages
-          </Text>
-          <FlatList
-            data={chatsData}
-            renderItem={renderChats}
-            keyExtractor={(item) => item.id}
-          />
-          <View style={styles.composer}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setInput(text)}
-              value={input}
-              fontFamily="Inter"
-              placeholder="Send a message..."
-              placeholderTextColor="rgba(34, 65, 89, .5)"
+        <AuthProvider>
+          <View>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: "Inter-Bold",
+                paddingLeft: 24,
+                paddingTop: 8,
+              }}
+            >
+              Messages
+            </Text>
+            <FlatList
+              data={chatsData}
+              renderItem={renderChats}
+              keyExtractor={(item) => item.id}
             />
-            <TouchableOpacity style={styles.send} onPress={onMessageSend}>
-              {input.trim() !== "" ? (
-                <Text style={{ color: "blue" }}>Send</Text>
-              ) : (
-                <Text style={{ color: "gray" }}>Send</Text>
-              )}
-            </TouchableOpacity>
           </View>
-        </View>
+        </AuthProvider>
       ) : (
         <Unauthenticated />
       )}

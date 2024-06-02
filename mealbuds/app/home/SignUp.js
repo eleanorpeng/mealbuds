@@ -10,9 +10,11 @@ import {
 } from "react-native";
 import { Themes } from "../../assets/Themes";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { auth, db } from "./firebase"; // Ensure this is the correct path to your firebase.js
+import { auth, db } from "../firebase"; // Ensure this is the correct path to your firebase.js
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { Link, useRouter } from "expo-router";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import storage from "../../data/storage";
 import { setDoc, doc } from "firebase/firestore";
 import storage from "../../data/storage";
 
@@ -33,9 +35,33 @@ export default function SignUp() {
         storage.save({ key: "user", data: userData });
         // Add the email to the "users" collection in Firestore
         await setDoc(doc(db, "users", userId), {
-          email: email,
-          name: name,
-          // Add any other user fields you want to store here
+          userInfo: {
+            userId: userId,
+            email: email,
+            name: name,
+            lastMessage: {
+              input: "",
+              timestamp: serverTimestamp(),
+            },
+            profilePicUrl:
+              "https://c0.klipartz.com/pngpicture/753/432/gratis-png-perfil-de-usuario-2018-in-sight-conferencia-de-usuario-expo-negocio-predeterminado-negocio-thumbnail.png",
+          },
+        });
+
+        await setDoc(doc(db, "userChats", userId), {
+          userInfo: {
+            userId: userId,
+            email: email,
+            name: name,
+            messages: [],
+            lastMessage: {
+              input: "",
+              timestamp: serverTimestamp(),
+            },
+            profilePicUrl:
+              "https://c0.klipartz.com/pngpicture/753/432/gratis-png-perfil-de-usuario-2018-in-sight-conferencia-de-usuario-expo-negocio-predeterminado-negocio-thumbnail.png",
+            // Add any other user fields you want to store here
+          },
         });
         router.push("home/homeDefault"); // Navigate to the home page after successful sign-up
       })

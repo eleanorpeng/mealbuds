@@ -1,17 +1,3 @@
-// firebase.js
-import { initializeApp } from "firebase/app";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAaM4ZMtwijYFenx5amCDo-SyJewXaT2Yk",
-  authDomain: "cs278mealbudge.firebaseapp.com",
-  projectId: "cs278mealbudge",
-  storageBucket: "cs278mealbudge.appspot.com",
-  messagingSenderId: "641438036615",
-  appId: "1:641438036615:ios:ae4ea9ea4f11a3d6a53e22",
-};
-
-const app = initializeApp(firebaseConfig);
-
 import {
   StyleSheet,
   Text,
@@ -22,73 +8,166 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  FlatList,
 } from "react-native";
 import { router, Link, useLocalSearchParams, Stack } from "expo-router";
 import { Themes } from "../../assets/Themes";
 import { useNavigation } from "expo-router";
-import { useState } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import {
+  arrayUnion,
+  doc,
+  serverTimestamp,
+  Timestamp,
+  updateDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { db, storage } from "../firebase";
+import uuid from "react-native-uuid";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { AuthContext, AuthProvider } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function Page() {
   const params = useLocalSearchParams();
-  let { messages, name, profilePicUrl } = params;
-
+  let { messages, name, profilePicUrl, uid } = params;
   const [input, setInput] = useState("");
-  const [allMessages, setAllMessages] = useState(messages);
+  const [chatHistory, setChatHistory] = useState([]);
 
-  const onMessageSend = () => {
-    if (input.trim() !== "") {
-      const newMessage = {
-        username: "James Landay",
-        profilePicUrl:
-          "https://pbs.twimg.com/profile_images/1258841358220972032/MzL1iXMN_400x400.jpg",
-        message: input,
-        timestamp: "Now",
-      };
-      setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-      setInput("");
-    }
+  const { currentUser } = useContext(AuthContext);
+  const { data } = useContext(ChatContext);
+  const flatListRef = useRef(null);
+
+  const combinedId =
+    currentUser.uid > uid ? currentUser.uid + uid : uid + currentUser.uid;
+
+  console.log("combinedID:", combinedId);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "chats", combinedId), (doc) => {
+      if (doc.exists()) {
+        setChatHistory(doc.data().messages || []);
+      }
+    });
+    return () => unsubscribe();
+  }, [currentUser, uid, combinedId]);
+
+  const onMessageSend = async () => {
+    const messageId = uuid.v4();
+
+    const newMessage = {
+      id: messageId,
+      input,
+      senderId: currentUser.uid,
+      date: Timestamp.now(),
+    };
+
+    console.log(currentUser.uid);
+    await updateDoc(doc(db, "userChats", currentUser.uid), {
+      messages: arrayUnion(newMessage),
+      lastMessage: {
+        input,
+      },
+      date: serverTimestamp(),
+    });
+
+    await updateDoc(doc(db, "userChats", uid), {
+      messages: arrayUnion(newMessage),
+      lastMessage: {
+        input,
+      },
+      date: serverTimestamp(),
+    });
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      lastMessage: {
+        input,
+      },
+      date: serverTimestamp(),
+    });
+
+    await updateDoc(doc(db, "users", uid), {
+      lastMessage: {
+        input,
+      },
+      date: serverTimestamp(),
+    });
+
+    await updateDoc(doc(db, "chats", combinedId), {
+      messages: arrayUnion(newMessage),
+    });
+
+    setInput("");
+    console.log("chatHistory:", chatHistory);
+  };
+
+  const renderMessage = ({ item }) => {
+    console.log("Rendering message:", item);
+    const isCurrentUser = item.senderId === currentUser.uid;
+    return (
+      <View
+        style={[
+          styles.messageContainer,
+          isCurrentUser ? styles.currentUserMessage : styles.otherUserMessage,
+        ]}
+      >
+        <Text style={styles.messageText}>{item.input}</Text>
+      </View>
+    );
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.header}>
-        <Image
-          style={styles.profilePic}
-          source={{
-            uri: profilePicUrl,
-          }}
-        />
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "Inter-Bold",
-          }}
-        >
-          {name}
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.composer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setInput(text)}
-          value={input}
-          fontFamily="Inter"
-          placeholder="Send a message..."
-          placeholderTextColor="rgba(34, 65, 89, .5)"
-        />
-        <TouchableOpacity style={styles.send} onPress={onMessageSend}>
-          {input.trim() !== "" ? (
-            <FontAwesome name="send" size={20} color="black" />
-          ) : (
-            <FontAwesome name="send" size={20} color="#C4C4C4" />
-          )}
+    <AuthProvider>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity style={styles.header}>
+          <Image
+            style={styles.profilePic}
+            source={{
+              uri: profilePicUrl,
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: "Inter-Bold",
+            }}
+          >
+            {name}
+          </Text>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        <FlatList
+          ref={flatListRef}
+          data={chatHistory}
+          renderItem={renderMessage}
+          keyExtractor={(item) => item.id}
+          style={styles.messageList}
+          onContentSizeChange={() =>
+            flatListRef.current.scrollToEnd({ animated: true })
+          }
+        />
+        <View style={styles.composer}>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => setInput(text)}
+            value={input}
+            fontFamily="Inter"
+            placeholder="Send a message..."
+            placeholderTextColor="rgba(34, 65, 89, .5)"
+          />
+          <TouchableOpacity style={styles.send} onPress={onMessageSend}>
+            {input.trim() !== "" ? (
+              <FontAwesome name="send" size={20} color="black" />
+            ) : (
+              <FontAwesome name="send" size={20} color="#C4C4C4" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </AuthProvider>
   );
 }
 
@@ -126,5 +205,25 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "92%",
+  },
+  currentUserMessage: {
+    backgroundColor: "#DCF8C6",
+    alignSelf: "flex-end",
+    padding: 8,
+    borderRadius: "10%",
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  otherUserMessage: {
+    backgroundColor: Themes.colors.gray,
+    alignSelf: "flex-start",
+    padding: 8,
+    borderRadius: "10%",
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  messageText: {
+    fontSize: 14,
+    fontFamily: "Inter-Regular",
   },
 });

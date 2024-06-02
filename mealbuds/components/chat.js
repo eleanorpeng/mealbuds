@@ -13,11 +13,58 @@ import {
 } from "react-native";
 import { Images, Themes } from "../assets/Themes";
 import { router, Link, useLocalSearchParams, Stack } from "expo-router";
+import { AuthContext, AuthProvider } from "../app/context/AuthContext";
+import React, { useEffect, useState, useContext } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../app/firebase";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const Chat = ({ name, profilePicUrl, time, thumbnailMessage, messages }) => {
+const Chat = ({ name, profilePicUrl, time, lastMessage, messages, uid }) => {
+  const { currentUser } = useContext(AuthContext);
+
+  const onChatPress = async () => {
+    console.log("CurrentUser:", currentUser);
+    console.log("User:", uid);
+
+    const combinedId =
+      currentUser.uid > uid ? currentUser.uid + uid : uid + currentUser.uid;
+
+    const res = await getDoc(doc(db, "chats", combinedId));
+
+    if (!res.exists()) {
+      await setDoc(doc(db, "chats", combinedId), { messages: [] });
+
+      // await updateDoc(doc(db, "userChats", currentUser.uid), {
+      //   [combinedId + ".userInfo"]: {
+      //     uid: uid,
+      //     displayName: name,
+      //     photoUrl: profilePicUrl,
+      //   },
+      //   [combinedId + ".date"]: serverTimestamp(),
+      // });
+
+      // await updateDoc(doc(db, "userChats", uid), {
+      //   [combinedId + ".userInfo"]: {
+      //     uid: currentUser.uid,
+      //     displayName: currentUser.displayName,
+      //     photoUrl: currentUser.photoUrl,
+      //   },
+      //   [combinedId + ".date"]: serverTimestamp(),
+      // });
+    }
+  };
   return (
     <View>
       <Link
@@ -27,11 +74,15 @@ const Chat = ({ name, profilePicUrl, time, thumbnailMessage, messages }) => {
             messages: JSON.stringify(messages),
             name: name,
             profilePicUrl: profilePicUrl,
+            uid: uid,
           },
         }}
         asChild
       >
-        <TouchableOpacity style={styles.chatPreviewContainer}>
+        <TouchableOpacity
+          style={styles.chatPreviewContainer}
+          onPress={onChatPress}
+        >
           <Image
             style={styles.profilePic}
             source={{
@@ -63,7 +114,7 @@ const Chat = ({ name, profilePicUrl, time, thumbnailMessage, messages }) => {
                 fontFamily: "Inter",
               }}
             >
-              {thumbnailMessage}
+              {lastMessage}
             </Text>
           </View>
         </TouchableOpacity>
